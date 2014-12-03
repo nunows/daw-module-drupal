@@ -1,0 +1,8 @@
+name = daw module
+description = trabalho final
+package = public-action
+version = 1.0
+core = 7.x
+files[] = daw_module.module
+
+

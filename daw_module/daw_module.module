@@ -1,0 +1,84 @@
+<?php
+
+include 'webservice.php';
+
+
+//hook_menu
+function daw_module_menu() {
+    $items = array();
+
+    $items['eventos'] = array(
+        'title' => '',
+        'page callback' => 'eventos',
+        'access arguments' => array('access content'),
+        'type' => MENU_CALLBACK,
+     );
+
+    $items['evento'] = array(
+        'title' => 'Evento',
+        'page callback' => 'evento',
+        'access arguments' => array('access content'),
+        'type' => MENU_CALLBACK,
+     );
+
+    $items['eventosgps'] = array(
+        'title' => '',
+        'page callback' => 'eventos_gps',
+        'access arguments' => array('access content'),
+        'type' => MENU_CALLBACK,
+     );
+
+    return $items;
+}
+
+//hook_theme
+function daw_module_theme($existing, $type, $theme, $path) {
+	return array(
+	    'eventos'=>array(
+	      'template'=>'/templates/eventos',
+	      'variables' => array('content' => null),
+	    ),
+	    'evento'=>array(
+	      'template'=>'/templates/evento',
+	      'variables' => array('content' => null),
+	    ),
+	    'eventosgps'=>array(
+	      'template'=>'/templates/eventosgps',
+	      'variables' => array('content' => null),
+	    ),
+	  );
+}
+
+//pesquisa eventos
+function eventos() {
+	$ws = new Webservice();
+
+	if (isset($_GET['p'])) {
+		$dados = $ws->pesquisa($_GET['p']);
+	} else {
+		$dados = "";	
+	}
+
+	$content = $dados;
+	return theme('eventos',array("content" => $content));
+}
+
+//mostra detalhe de um evento
+function evento() {
+	$ws = new Webservice();
+	$dados = $ws->obterEvento($_GET['id']);
+
+	$content =  $dados;
+	return theme('evento',array("content" => $content));
+}
+
+//pesquisa eventos por gps
+function eventos_gps(){
+	drupal_add_js("http://modernizr.com/downloads/modernizr-2.5.3.js");
+	drupal_add_js("http://code.jquery.com/jquery-1.7.2.min.js");
+
+	$content =  "";
+	return theme('eventosgps',array("content" => $content));
+}
+
+
